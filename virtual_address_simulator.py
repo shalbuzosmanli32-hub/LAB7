@@ -9,42 +9,41 @@ page_table = {
 }
 
 while True:
-    address = input("Enter a virtual adress(q to quit): ")
+    user_input = input("\nEnter a virtual address (q to quit): ").strip()
 
-
-    if address.lower() == "q":
+    if user_input.lower() == "q":
         print("Program terminated.")
         break
 
     try:
-        address = int(address)
+        virtual_address = int(user_input)
     except ValueError:
-        print("Error: enter a number or q.")
+        print("Error: enter a whole number or q.")
         continue
 
-    if address < 0:
+    if virtual_address < 0:
         print("Error: negative addresses are not allowed.")
         continue
 
-    if address >= VIRTUAL_ADDRESS_SPACE:
+    if virtual_address >= VIRTUAL_ADDRESS_SPACE:
         print("Error: address must be between 0 and 4095.")
         continue
 
-    vpn = address // PAGE_SIZE
-    offset = address % PAGE_SIZE
+    page_number = virtual_address // PAGE_SIZE
+    offset = virtual_address % PAGE_SIZE
 
-    print(f"Virtual Page Number (VPN): {vpn}")
+    print(f"Virtual Page Number: {page_number}")
     print(f"Page Offset: {offset}")
 
-    page = page_table[vpn]
+    entry = page_table[page_number]
 
-    if page["valid"]:
-        frame = page["frame"]
-        physical_address = (frame * PAGE_SIZE) + offset
-
-        print(f"Physical Frame={frame}")
-        print(f"Physical Address={physical_address}")
-    else:
+    if not entry["valid"]:
         print("PAGE FAULT")
+    else:
+        frame_number = entry["frame"]
+        physical_address = frame_number * PAGE_SIZE + offset
+
+        print(f"Physical Frame: {frame_number}")
+        print(f"Physical Address: {physical_address}")
 
     print("-" * 40)
