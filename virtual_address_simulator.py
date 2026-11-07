@@ -1,7 +1,7 @@
 PAGE_SIZE = 1024
 ADDRESS_SPACE = 4096
 
-# Each page has a physical frame and a valid (present) bit.
+
 page_table = {
     0: {"frame": 2, "valid": True},
     1: {"frame": 0, "valid": True},
